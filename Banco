@@ -1,0 +1,32 @@
+# Dicionário para armazenar as contas bancárias e seus saldos
+contas = {
+    '1234567890': 5000.00,
+    '9876543210': 3000.00,
+    '2468135790': 10000.00
+}
+
+# Função para realizar a transferência de fundos entre contas
+def realizar_transferencia(conta_origem, conta_destino, valor):
+    if conta_origem not in contas:
+        print("Conta de origem inválida.")
+        return
+    if conta_destino not in contas:
+        print("Conta de destino inválida.")
+        return
+    if contas[conta_origem] < valor:
+        print("Saldo insuficiente na conta de origem.")
+        return
+    
+    contas[conta_origem] -= valor
+    contas[conta_destino] += valor
+    print("Transferência realizada com sucesso!")
+    print("Novo saldo da conta de origem:", contas[conta_origem])
+    print("Novo saldo da conta de destino:", contas[conta_destino])
+
+# Solicitação das informações do usuário
+conta_origem = input("Informe a conta de origem: ")
+conta_destino = input("Informe a conta de destino: ")
+valor = float(input("Informe o valor a ser transferido: "))
+
+# Realização da transferência
+realizar_transferencia(conta_origem, conta_destino, valor)
