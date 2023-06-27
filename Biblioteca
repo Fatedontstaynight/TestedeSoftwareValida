@@ -1,0 +1,81 @@
+class Livro:
+    def __init__(self, titulo, autor, disponivel=True):
+        self.titulo = titulo
+        self.autor = autor
+        self.disponivel = disponivel
+
+class Usuario:
+    def __init__(self, nome, senha):
+        self.nome = nome
+        self.senha = senha
+
+class Biblioteca:
+    def __init__(self):
+        self.livros = []
+        self.usuarios = []
+
+    def pesquisar_livro(self, termo_pesquisa):
+        resultados = []
+        for livro in self.livros:
+            if termo_pesquisa.lower() in livro.titulo.lower() or termo_pesquisa.lower() in livro.autor.lower():
+                resultados.append(livro)
+        return resultados
+
+    def solicitar_emprestimo(self, usuario, livro):
+        if usuario in self.usuarios:
+            for l in self.livros:
+                if l.titulo == livro.titulo and l.autor == livro.autor and l.disponivel:
+                    l.disponivel = False
+                    print("Empréstimo do livro '{}' de '{}' para o usuário '{}' solicitado com sucesso!".format(livro.titulo, livro.autor, usuario.nome))
+                    break
+            else:
+                print("Livro indisponível para empréstimo.")
+        else:
+            print("Usuário não encontrado.")
+
+# Exemplo de uso
+biblioteca = Biblioteca()
+
+# Inserindo livros de amostra na biblioteca
+livro1 = Livro("Aprenda Python", "João Silva")
+livro2 = Livro("Python para Iniciantes", "Maria Souza")
+livro3 = Livro("Algoritmos em Python", "Pedro Santos")
+
+biblioteca.livros = [livro1, livro2, livro3]
+
+# Criação de usuários
+usuario1 = Usuario("Kirito", "123456!")
+usuario2 = Usuario("Asuna", "feijao123")
+
+biblioteca.usuarios = [usuario1, usuario2]
+
+# Login do usuário
+nome_usuario = input("Digite o nome de usuário: ")
+senha_usuario = input("Digite a senha: ")
+
+usuario_logado = None
+for usuario in biblioteca.usuarios:
+    if usuario.nome == nome_usuario and usuario.senha == senha_usuario:
+        usuario_logado = usuario
+        break
+
+if usuario_logado:
+    print("Login realizado com sucesso!")
+    termo_pesquisa = input("Digite o título ou autor do livro que deseja emprestar: ")
+    livros_encontrados = biblioteca.pesquisar_livro(termo_pesquisa)
+
+    if len(livros_encontrados) > 0:
+        print("Livros encontrados:")
+        for i, livro in enumerate(livros_encontrados, start=1):
+            print("{}. {} - {}".format(i, livro.titulo, livro.autor))
+
+        livro_escolhido = int(input("Digite o número correspondente ao livro que deseja emprestar: ")) - 1
+
+        if 0 <= livro_escolhido < len(livros_encontrados):
+            biblioteca.solicitar_emprestimo(usuario_logado, livros_encontrados[livro_escolhido])
+        else:
+            print("Opção inválida.")
+    else:
+        print("Nenhum livro encontrado com o termo de pesquisa fornecido.")
+else:
+    print("Usuário ou senha incorretos.")
